@@ -5,8 +5,7 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        Deployment is happening here and is changing again and again
+        <h1>I love you Catherine more than words can say...</h1>
       </header>
     </div>
   );
