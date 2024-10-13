@@ -5,7 +5,7 @@ import bop from './videos/CoachSteve.mp3';
 const ReactVideoPlayer = () => {
   return (
     <div>
-      <Video autoPlay loop>
+      <Video>
         <source src={bop} type="video/webm" />
       </Video>
     </div>
