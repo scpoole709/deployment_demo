@@ -9,7 +9,6 @@ const SongList = [ { title: 'Patriotic Medly', src: './videos/CoachSteve.mp4', c
 ];
 
 const NavBar = ({handler, title}) => {
-  const [song, setSong] = useState(SongList[0]);
   return (
     <div className='nav-list-container'>
         <ul>
