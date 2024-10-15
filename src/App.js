@@ -2,8 +2,7 @@
 import './App.css';
 import NavBar from './NavBar';
 import ReactVideoPlayer from './ReactVideoPlayer';
-import { useEffect, useState } from 'react';
-import VideoPlayer from './VideoPlayer';
+import { useState } from 'react';
 
 function App() {
   const [src, setSrc] = useState('');
