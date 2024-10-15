@@ -17,7 +17,7 @@ const ReactVideoPlayer = ({srcIn}) => {
 
   return (
     <div className='react-video'>
-      {mp &&  <Video src={mp} autoPlay></Video>}      
+      {mp &&  <Video src={mp} autoPlay></Video>} 
     </div>
   )
 }
