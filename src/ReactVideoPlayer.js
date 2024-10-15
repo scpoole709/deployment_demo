@@ -1,12 +1,11 @@
 import React from 'react'
 import { DefaultPlayer as Video } from 'react-html5video'
-import bop from './videos/CoachSteve.mp3';
+import bop from './videos/CoachSteve.mp4';
 
 const ReactVideoPlayer = () => {
   return (
     <div>
-      <Video>
-        <source src={bop} type="video/webm" />
+      <Video src={bop}>
       </Video>
     </div>
   )
