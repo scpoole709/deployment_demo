@@ -14,7 +14,7 @@ const NavBar = ({handler, title}) => {
         <ul>
             {   
                 SongList.map( l => {
-                        return <li key={'' + l.key} onClick={()=> {setSong(l); handler(l)}}>{l.title}</li>
+                        return <li key={'' + l.key} onClick={()=> {handler(l)}}>{l.title}</li>
                     })
             }
             
