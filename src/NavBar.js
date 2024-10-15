@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React  from 'react'
 
 const SongList = [ { title: 'Patriotic Medly', src: './videos/CoachSteve.mp4', comment: 'How about some good ole fashioned patriotism...', key: 1},
                    { title: 'Broken Wings', src: './videos/BrokenWings.mp4', comment: 'For my kids...', key: 2},
