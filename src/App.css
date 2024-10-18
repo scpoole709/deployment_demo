@@ -1,3 +1,4 @@
+
 .App {
   display: flex;
   text-align: center;
@@ -44,10 +45,16 @@
   display: inline-block;
 }
 
+.fill-div {
+  height: 100%;
+  width: 100%;
+}
+
 .nav-list-container {
   width:fit-content;
   height:100%;
-  background: white;
+  background: gray;
+  color: black;
   border: solid 10px green;
   li{
     min-width: 15em;
