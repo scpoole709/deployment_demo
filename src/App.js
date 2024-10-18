@@ -1,32 +1,30 @@
 
+import { BrowserRouter, NavLink, Route, Routes } from 'react-router-dom';
 import './App.css';
-import NavBar from './NavBar';
-import ReactVideoPlayer from './ReactVideoPlayer';
-import { useState } from 'react';
+import VideoPage from './pages/VideoPage';
+import Home from './pages/Home';
+import CanvasPage from './pages/CanvasPage';
 
 function App() {
-  const [src, setSrc] = useState('');
-  const [title, setTitle] = useState('');
-  const [comment, setComment] = useState('Welcome');
-
-  function handler(newSrc){
-    setSrc(newSrc.src);
-    setTitle(newSrc.title);
-    setComment(newSrc.comment);
-  }
-
   return (
-    <div className="App">
+    <BrowserRouter>
+    <header>
+      <h1>Playground Politique</h1>
       <nav>
-      <NavBar handler={handler} title={title}/>
+        
+        <NavLink to="/">Home</NavLink>
+        <NavLink to="/canvas">Graphics</NavLink>
+        <NavLink to="songs">Songs</NavLink>
       </nav>
-      <header className="App-header">
-        <h1>{title}</h1>
-        <h2>{comment}</h2>
-        {/* <VideoPlayer /> */}
-        <ReactVideoPlayer srcIn={src} />
       </header>
-    </div>
+       <main>
+      <Routes>
+        <Route index element={ <Home />} />
+        <Route path="canvas" element={<CanvasPage />} />
+        <Route path="songs" element={<VideoPage />} />
+      </Routes>
+    </main>
+    </BrowserRouter>
   );
 }
 
