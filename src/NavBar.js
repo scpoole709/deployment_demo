@@ -1,6 +1,6 @@
 import React from 'react'
 
-const SongList = [ { title: 'Patriotic Medly', src: '../../src/videos/CoachSteve.mp4', comment: 'How about some good ole fashioned patriotism...', key: 1},
+const SongList = [ { title: 'Patriotic Medly', src: './videos/CoachSteve.mp4', comment: 'How about some good ole fashioned patriotism...', key: 1},
                    { title: 'Broken Wings', src: './videos/BrokenWings.mp4', comment: 'For my kids...', key: 2},
                    { title: 'Whispers', src: './videos/Whispers.mp4', comment: 'Political commentary...', key: 3},
                    { title: 'Ancient Soul', src: './videos/AncientSoul.mp4', comment: 'Wrote this after the 2012 election...', key: 4},

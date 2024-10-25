@@ -10,6 +10,8 @@ body {
   padding: 20px;
   font-family: "Poppins";
   background: var(--secondary);
+  border: solid 10px blue;
+  height: 100%;
 }
 
 code {
@@ -69,5 +71,6 @@ header nav a.active {
 /* page content */
 main {
   max-width: 1200px;
+  height: fit-content;
   margin: 40px auto;
 }
