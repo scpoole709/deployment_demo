@@ -9,14 +9,18 @@
 }
 
 .fd-selection {
-    background: none;
-    height: fit-content;
+    background: #ddd;
+    height: 100%;
     width: 100%;
     display: grid;
     grid-template-columns: 1fr;
-    grid-template-rows: repeat(auto-fill, fit-content);
+    grid-template-rows: auto auto 1fr;
     padding-top: 10px;
     overflow: hidden;
+
+    button{
+        width: 15em;
+    }
 }
 
 .fd-canvas-div {
@@ -29,7 +33,8 @@
     display: flex;
 
     canvas{
-        border: solid 2px blue;
+        height: 100%;
+        width: 100%;
     }
 }
 
@@ -70,8 +75,8 @@
 
 .fd-scale {
     z-index: 3;
-    width: 4em;
-    height: 10em;
+    width: 2em;
+    height: 5em;
     position: absolute;
     top: 0em;
     right: 0em;
@@ -110,6 +115,14 @@
     height: 37px;
     margin: 0 auto;
     padding-top: 7px;
+}
+
+.fd-file{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    gap: 10px;
 }
 
 .fd-info {

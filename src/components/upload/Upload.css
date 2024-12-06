@@ -1,0 +1,35 @@
+.ub-fileinputs {
+  position: relative;
+  text-align: center;
+  flex-basis: 100%;
+  button {
+    margin: 0 auto;
+    width: 15em;
+  }
+}
+
+.ub-fake-file {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  right: 0px;
+  display: flex;
+  z-index: 1;
+}
+
+.ub-real-file {
+  position: relative;
+  text-align: right;
+  opacity: 0.0;
+}
+
+.ub-input {
+  height: 0;
+  width: 0;
+  padding-left: 0px;
+}
+
+.ub-input:focus {
+  border: solid 1px lightblue;
+  outline: solid 1px lightblue;
+}

@@ -1,31 +1,28 @@
-import React, { createRef, useState } from 'react';
+import React, { createRef } from 'react';
 
-// import { Component, ElementRef, OnInit, ViewChild, AfterViewInit, Input, HostListener, forwardRef, Output, EventEmitter } from '@angular/core';
-// import { NG_VALUE_ACCESSOR } from '@angular/forms';
-// import * as FileSaver from 'file-saver';
-// import { IHelpDictionary, IHelpItem, IHelpComponent } from '../i-help/i-help.component';
-// import { SliderComponent } from '../slider/slider.component';
-// import { NodeSelection } from './device-images';
 import { NodeSelection, Connector, FlowPoint, FPDiamond, FPImage, FPOval, FPRectangle, FPRenderer, FPLocation, FPUser, FPBarcode } from './FlowObjects.ts';
-import Slider from '../slider/Slider.js';
 import { TabCtrl, TabInfo } from '../tab-ctrl/TabCtrl.tsx';
 import NodePanel from './NodePanel.js';
 import CreationMenu from './CreationMenu.js';
 import './FlowDesigner.css';
 import Caption from './Caption.js';
+import Slider from '../slider/Slider.js';
+import Upload from '../upload/Upload.tsx';
 
-const MENU_ACTIONS = {
-  CLICKED: 'clicked',
-  CANCELED: 'canceled'
-}
+// const MENU_ACTIONS = {
+//   CLICKED: 'clicked',
+//   CANCELED: 'canceled'
+// }
 type FPState = {
   menuShowing: 'none' | 'creation' | 'caption';
   state: string;
+  currentTab: number;
 }
 
 type FPProps = {
   nodeSelection: NodeSelection[];
   logoSrc: string;
+  readOnly?: boolean;
 }
 export default class FlowDesignerComponent extends React.Component<FPProps, FPState> {
   
@@ -37,8 +34,12 @@ export default class FlowDesignerComponent extends React.Component<FPProps, FPSt
     this.contextMenu = createRef();
     this.slider = createRef();  
     this.canvasRef = createRef();
+    this.keyEvent = this.keyEvent.bind(this);
 
-    this.state = {menuShowing: 'none', state: ''};
+    this.state = {menuShowing: 'none', state: '', currentTab: 1};
+    setTimeout( () => {
+      this.checkCanvas();
+    }, 1000);
   }
 
   menuReducer = (state, action) =>{
@@ -61,21 +62,20 @@ export default class FlowDesignerComponent extends React.Component<FPProps, FPSt
   onChange: any = () => {}
   onTouch: any = () => {}
 
-  currentTab = 0;
   tabs:TabInfo []= [
     {
       enabled: true,
-      title: "Services",
+      title: "User Defined",
       show: true
     },
     {
       enabled: true,
-      title: "Locations",
+      title: "Default Objects",
       show: true
     },
     {
       enabled: true,
-      title: "Graphics",
+      title: "File",
       show: true
     }];
 
@@ -98,7 +98,7 @@ export default class FlowDesignerComponent extends React.Component<FPProps, FPSt
   _scale = 1;
   set scale(value:number)
   {
-    this._scale = value;
+    this._scale = value / 100;
     this.redraw(false);
   }
   get scale()
@@ -196,7 +196,7 @@ export default class FlowDesignerComponent extends React.Component<FPProps, FPSt
 
   tabChange(event)
   {
-    this.currentTab = event.newIndex;
+    this.setState({currentTab: event.newIndex});
   }
   
   setFocus()
@@ -213,7 +213,6 @@ export default class FlowDesignerComponent extends React.Component<FPProps, FPSt
           this.canvas.height = r.height;
         }
         
-        let ctx = this.ctx;
         this.redraw(false);    
         //this.slider.doDrawing();  
       }
@@ -259,8 +258,10 @@ export default class FlowDesignerComponent extends React.Component<FPProps, FPSt
     else if (dbl)
     {
       let sel = this.atPoint(ev);
-      this.fpPending = sel[0];
-      this.openFPMenu(sel[0], 'caption');
+      if (sel.length > 0){
+        this.fpPending = sel[0];
+        this.openFPMenu(sel[0], 'caption');
+      }
     }
   }
 
@@ -269,51 +270,53 @@ export default class FlowDesignerComponent extends React.Component<FPProps, FPSt
     this.redraw(false);
   }
 
-  // @HostListener('window:keyup', ['$event'])
-  // keyEvent(event: KeyboardEvent) 
-  // {
-  //   switch(event.key)
-  //   {
-  //     case "Delete":
-  //       if (this.currentMenu == undefined)
-  //       {
-  //         for (var i = this.flowPoints.length; i > 0; i--)
-  //         {
-  //           let fp = this.flowPoints[i-1];
-  //           if (fp.selected > 0)
-  //           {
-  //             for (var j = this.connectors.length; j > 0; j--)
-  //             {
-  //               let c = this.connectors[j-1];
-  //               if (c.fp1 == fp || c.fp2 == fp)
-  //               {
-  //                 this.connectors.splice(j-1, 1);
-  //               }
-  //             }
-  //             this.flowPoints.splice(i-1, 1);
-  //           }
-  //         }
-  //         for (var j = this.connectors.length; j > 0; j--)
-  //         {
-  //           let c = this.connectors[j-1];
-  //           if (c.selected > 0)
-  //           {
-  //             this.connectors.splice(j-1, 1);
-  //           }
-  //         }
 
-  //         this.redraw(this.canvas.getContext("2d"), true);
-  //       }
-  //       break;
-  //   }   
-  // }
+  keyEvent(event) 
+  {
+    switch(event.key)
+    {
+      case "Delete":
+        if (this.currentMenu == undefined)
+        {
+          for (var i = this.flowPoints.length; i > 0; i--)
+          {
+            let fp = this.flowPoints[i-1];
+            if (fp.selected > 0)
+            {
+              for (var j = this.connectors.length; j > 0; j--)
+              {
+                let c = this.connectors[j-1];
+                if (c.fp1 == fp || c.fp2 == fp)
+                {
+                  this.connectors.splice(j-1, 1);
+                }
+              }
+              this.flowPoints.splice(i-1, 1);
+            }
+          }
+          for (var j = this.connectors.length; j > 0; j--)
+          {
+            let c = this.connectors[j-1];
+            if (c.selected > 0)
+            {
+              this.connectors.splice(j-1, 1);
+            }
+          }
+
+          this.redraw(true);
+        }
+        break;
+    }   
+  }
 
   checkCanvas()
   {
     let canvasDiv = this.canvasDivRef.current as HTMLElement;
-    this.canvas.width = canvasDiv.clientWidth;
-    this.canvas.height = canvasDiv.clientHeight;
-    this.redraw(false);
+    if (!!canvasDiv){
+      this.canvas.width = canvasDiv.clientWidth;
+      this.canvas.height = canvasDiv.clientHeight;
+      this.redraw(false);
+    }
 
     // if (!canvasDiv){
     //   let w = 0;
@@ -342,6 +345,7 @@ export default class FlowDesignerComponent extends React.Component<FPProps, FPSt
   
   redraw(updateData:boolean)
   {
+    if (!this.canvas) return;
     const ctx = this.ctx;
     if (!ctx) return;
     //ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
@@ -367,7 +371,7 @@ export default class FlowDesignerComponent extends React.Component<FPProps, FPSt
         ctx.translate(-tmpX, -tmpY);
       }  
       
-      if (each.type == "FPUser")
+      if (each.type === "FPUser")
         this.userRenderer.render(ctx, each);
     
       each.render(ctx);  
@@ -375,7 +379,7 @@ export default class FlowDesignerComponent extends React.Component<FPProps, FPSt
       ctx.resetTransform();
       ctx.scale(this.scale, this.scale);
 
-      if (this.state.state == "connecting" || each.selected > 0)
+      if (this.state.state === "connecting" || each.selected > 0)
         each.drawSelectionConnector(ctx);
          
       ctx.restore();    
@@ -400,7 +404,7 @@ export default class FlowDesignerComponent extends React.Component<FPProps, FPSt
   textEntry:string = "";
   mouseDown(ev:any)
   {
-    if (true)
+    if (!this.props.readOnly)
     {
       const ctx = this.ctx;
 
@@ -634,10 +638,12 @@ export default class FlowDesignerComponent extends React.Component<FPProps, FPSt
         {
           if (Connector.contains((e.clientX - rect.left) / this.scale, (e.clientY - rect.top) / this.scale, fp, j, ctx))
           {
-            connector.fp2 = fp;
-            connector.index2 = j;
-            this.connectors.push(connector);
-            break;
+            if (connector?.fp1?.id != fp.id){
+              connector.fp2 = fp;
+              connector.index2 = j;
+              this.connectors.push(connector);
+              break;
+            }
           }
         }
       });
@@ -650,7 +656,6 @@ export default class FlowDesignerComponent extends React.Component<FPProps, FPSt
   bendConnector(ev:MouseEvent, connector:Connector)
   {
     let rect = this.canvas.getBoundingClientRect();
-    let ctx = this.canvas.getContext("2d");
   
     let startMoveX = (ev.clientX - rect.left);
     let startMoveY = (ev.clientY - rect.top);
@@ -786,13 +791,12 @@ export default class FlowDesignerComponent extends React.Component<FPProps, FPSt
 
     fpNew.x = rect.x;
     fpNew.y = rect.y;
-    fpNew.w = item == "Logo" ? Math.min(rect.w, rect.h) : rect.w;
-    fpNew.h = item == "Logo" ? fpNew.w : rect.h;
+    fpNew.w = item === "Logo" ? Math.min(rect.w, rect.h) : rect.w;
+    fpNew.h = item === "Logo" ? fpNew.w : rect.h;
     fpNew.text = item;
     this.fpPending = fpNew;
     this.flowPoints.push(fpNew);
 
-    let ctx = this.canvas.getContext("2d");
     this.redraw(true);
     this.openFPMenu(fpNew, 'caption');    
   }
@@ -835,8 +839,8 @@ export default class FlowDesignerComponent extends React.Component<FPProps, FPSt
 
     fpNew.x = this.fpPending.x;
     fpNew.y = this.fpPending.y;
-    fpNew.w = item == "Logo" ? Math.min(this.fpPending.w, this.fpPending.h) : this.fpPending.w;
-    fpNew.h = item == "Logo" ? fpNew.w : this.fpPending.h;
+    fpNew.w = item === "Logo" ? Math.min(this.fpPending.w, this.fpPending.h) : this.fpPending.w;
+    fpNew.h = item === "Logo" ? fpNew.w : this.fpPending.h;
     fpNew.text = text; //this.fpPending.text;
     this.fpPending = fpNew;
     this.flowPoints.push(fpNew);
@@ -857,16 +861,16 @@ export default class FlowDesignerComponent extends React.Component<FPProps, FPSt
     // FileSaver.saveAs(blob, "FlowDesigner.fd");
     
 
-    /*
-    var text = "hello world",
-    blob = new Blob([text], { type: 'text/plain' }),
-    anchor = document.createElement('a');
+    
+    // var text = "hello world",
+    // blob = new Blob([text], { type: 'text/plain' }),
+    let anchor = document.createElement('a');
 
-    anchor.download = "c:\\pdfs\\hello.txt";
+    anchor.download = "flow_diagram.fd";
     anchor.href = (window.webkitURL || window.URL).createObjectURL(blob);
     anchor.dataset.downloadurl = ['text/plain', anchor.href].join(':');
     anchor.click();
-    */
+    
     
   }
 
@@ -880,44 +884,45 @@ export default class FlowDesignerComponent extends React.Component<FPProps, FPSt
     return undefined;
   }
 
-  loadDiagram(event)
+  loadDiagram(ev)
   {
-    // this.closeMenu();
-    // var fileReader = new FileReader();  
+    this.closeMenu();
+    var fileReader = new FileReader();  
 
-    // fileReader.onload = (e)=> {
+    fileReader.onload = (e)=> {
+      if (!!e.target && e.target.result) {
+        var typedarray = atob(e.target.result.toString());
+        let data = JSON.parse(typedarray);
+        this.flowPoints = [];
+        data.flowPoints.forEach( each => {
+          switch (each.type)
+          {
+            case 'FPOval':
+              this.flowPoints.push(new FPOval(each));
+              break;
+            case 'FPRectangle':
+              this.flowPoints.push(new FPRectangle(each));
+              break;
+            case 'FPImage':
+              this.flowPoints.push(new FPImage(each));
+              break;
+            }
+        });
+        this.connectors = [];
+        data.connectors.forEach( each => {
+          let c = new Connector();
+          c.fp1 = this.fpByID(each.fp1.id);
+          c.index1 = each.index1;
+          c.fp2 = this.fpByID(each.fp2.id);
+          c.index2 = each.index2;
+        
+          this.connectors.push(c);
+        });
+        this.redraw(false);
+      }      
+    }
 
-    //   var typedarray = atob(fileReader.result.toString());
-    //   let data = JSON.parse(typedarray);
-    //   this.flowPoints = [];
-    //   data.flowPoints.forEach( each => {
-    //     switch (each.type)
-    //     {
-    //       case 'FPOval':
-    //         this.flowPoints.push(new FPOval(each));
-    //         break;
-    //       case 'FPRectangle':
-    //         this.flowPoints.push(new FPRectangle(each));
-    //         break;
-    //       case 'FPImage':
-    //         this.flowPoints.push(new FPImage(each));
-    //         break;
-    //       }
-    //   });
-    //   this.connectors = [];
-    //   data.connectors.forEach( each => {
-    //     let c = new Connector();
-    //     c.fp1 = this.fpByID(each.fp1.id);
-    //     c.index1 = each.index1;
-    //     c.fp2 = this.fpByID(each.fp2.id);
-    //     c.index2 = each.index2;
-      
-    //     this.connectors.push(c);
-    //   });
-    //   this.redraw(this.canvas.getContext("2d"), false);
-    // }      
-
-    // fileReader.readAsText(event.target.files[0]);
+    fileReader.readAsText(ev.target.files[0]);
   }
 
   setupData(data:FlowDesignerData)
@@ -1124,7 +1129,6 @@ export default class FlowDesignerComponent extends React.Component<FPProps, FPSt
   getSelectedConnectorAtPoint(ev:MouseEvent, ctx):Connector | undefined
   {
     let p = this.pt(ev);
-    let selId = Date.now();
     
     for (var i = 0; i < this.connectors.length; i++) {
       let c = this.connectors[i];
@@ -1176,14 +1180,11 @@ export default class FlowDesignerComponent extends React.Component<FPProps, FPSt
   deviceDrag(ev, d:NodeSelection)
   {
     ev.dataTransfer.setData("text", d.name);
-    let data = ev.dataTransfer.getData("text");
-    //console.log(data);
-  }   
+  }
 
   graphicDrag(ev, text)
   {
     ev.dataTransfer.setData("text/json", {type:text});
-    let data = ev.dataTransfer.getData("text");
   }   
 
   allowDrop(ev) {
@@ -1279,7 +1280,7 @@ export default class FlowDesignerComponent extends React.Component<FPProps, FPSt
           fp.x = (ev.clientX - rect.left - fp.w / 2) / this.scale;
           fp.y = (ev.clientY - rect.top - fp.h / 2) / this.scale;
           fp.text = text;          
-          fp.asset = data;
+          fp.asset = "";
           this.flowPoints.push(fp);
           break;
       }
@@ -1302,7 +1303,6 @@ export default class FlowDesignerComponent extends React.Component<FPProps, FPSt
         this.flowPoints.push(fp);
       }
     }
-    let ctx = this.ctx;
     this.redraw(true);  
   }
 
@@ -1313,7 +1313,7 @@ export default class FlowDesignerComponent extends React.Component<FPProps, FPSt
     for (var i = 0; i < this.nodeSelection.length; i++)
     {
       s = this.nodeSelection[i].path.lastIndexOf("/");
-      if (test == this.nodeSelection[i].path.substring(s))
+      if (test === this.nodeSelection[i].path.substring(s))
       {
         return this.nodeSelection[i].name;
       }
@@ -1362,46 +1362,43 @@ export default class FlowDesignerComponent extends React.Component<FPProps, FPSt
     {/* <i-help></i-help> */}
       <div className="fd-container">
         <div className="fd-scale">
-        {/* <Slider ref={this.slider} title={Zoom}" [show]="showzoom" [minimum]="0.1" [maximum]="2" [(ngModel)]="scale"></app-slider> */}
+          <Slider orientation={'y'} minimum={0} maximum={100} callback={(ev) => this.scale = ev} />
         </div>
   
       <div className="fd-selection">
-        <div style={{display:'flex', justifyContent:'space-between'}}>
-          <TabCtrl tabs={this.tabs} small={true} onTabChange={ (ev:number) => this.tabChange(ev)} />
-          <i className="fa fa-info-circle fd-info" aria-hidden="true" onClick={ (ev) => this.showInfo(ev)}></i>
+        <div style={{ height: 'fit-content'}}>
+          <TabCtrl tabs={this.tabs} small={true} onTabChange={ (ev:number) => this.tabChange(ev)} currentTab={1} />
+          {/* <i className="fa fa-info-circle fd-info" aria-hidden="true" onClick={ (ev) => this.showInfo(ev)}></i> */}
         </div>
         <span style={{width:'100%',borderTop:'solid 1px black',marginBottom:'10px'}}></span>
 
-        { this.currentTab == 2 && <NodePanel nodeSelection={this.nodeSelection} path={this.path} deviceDrag={this.deviceDrag}/> }
+        { this.state.currentTab == 0 && <NodePanel nodeSelection={this.nodeSelection} path={this.path} deviceDrag={this.deviceDrag}/> }
 
-        { this.currentTab == 1 &&
-          <div>
-            <img src="./assets/images/HandHeldScanner.gif" className="fd-graphic" />
-            <img src="./assets/images/Laminator.gif" className="fd-graphic" />
-            <img src="./assets/images/Finisher.gif" className="fd-graphic" />
-            <img src="./assets/barcode/Code39.gif" className="fd-graphic" />
-            <img src="./assets/barcode/Code128.gif" className="fd-graphic" />
-            <img src="./assets/barcode/EAN_13.gif" className="fd-graphic" />
-            <img src="./assets/barcode/DataMatrix.gif" className="fd-graphic-square" />
-            <img src="./assets/barcode/UPC_A.gif" className="fd-graphic" />
+        { this.state.currentTab == 2 &&
+          <div className="fd-file">
+            <button onClick={ () => this.save()}>Download Flow Diagram</button>
+            <Upload label={'Upload Flow Diagram'} fileSelected={(ev) => this.loadDiagram(ev)} accepted={"'.fd'"} />
           </div>
         }
     
-        { this.currentTab == 0 &&
+        { this.state.currentTab == 1 &&
           <div className='fd-menu'>
-            <img src={require('./images/Start.jpg')} className="fd-graphic" onDragStart={(ev)=>this.onDragStart(ev, 'Start')}/>
-            <img src={require('./images/End.jpg')} className="fd-graphic" onDragStart={(ev)=>this.onDragStart(ev, 'End')}/>
-            {/* <img src={require('./images/Diamond.jpg')} className="fd-graphic" onDragStart={(ev)=>this.onDragStart(ev, 'Decision')}/> */}
-            <img src={require('./images/Decision.jpg')} className="fd-graphic" onDragStart={(ev)=>this.onDragStart(ev, 'Decision')}/>
-            <img src={require('./images/Process.jpg')} className="fd-graphic" onDragStart={(ev)=>this.onDragStart(ev, 'Process')}/>
+            <img alt='' src={require('./images/Start.png')} className="fd-graphic" onDragStart={(ev)=>this.onDragStart(ev, 'Start')}/>
+            <img alt='' src={require('./images/End.png')} className="fd-graphic" onDragStart={(ev)=>this.onDragStart(ev, 'End')}/>
+            {/* <img alt='' src={require('./images/Diamond.png')} className="fd-graphic" onDragStart={(ev)=>this.onDragStart(ev, 'Decision')}/> */}
+            <img alt='' src={require('./images/Decision.png')} className="fd-graphic" onDragStart={(ev)=>this.onDragStart(ev, 'Decision')}/>
+            <img alt='' src={require('./images/Process.png')} className="fd-graphic" onDragStart={(ev)=>this.onDragStart(ev, 'Process')}/>
           </div> 
         }
       </div>
-      <div ref={this.canvasDivRef} className="fd-canvas-div" style={{ borderLeft: '3px solid #555'}}>
-        <canvas ref={this.canvasRef} onMouseDown={ (ev) => this.mouseDown(ev)} onDragOver={ (ev) => this.allowDrop(ev)}  onDrop={ (ev) => this.deviceDrop(ev)} onClick={ (ev) => this.fpClicked(ev,false)} onDoubleClick={ (ev) => this.fpClicked(ev,true)}></canvas>
+      <div ref={this.canvasDivRef} className="fd-canvas-div" style={{ borderLeft: '3px solid #555'}} >
+        <canvas onKeyDown={(ev) => this.keyEvent(ev)} ref={this.canvasRef} onMouseDown={ (ev) => this.mouseDown(ev)} onDragOver={ (ev) => this.allowDrop(ev)}  onDrop={ (ev) => this.deviceDrop(ev)} onClick={ (ev) => this.fpClicked(ev,false)} onDoubleClick={ (ev) => this.fpClicked(ev,true)}></canvas>
         <div ref={this.contextMenu} className="fd-context">
           { this.state.menuShowing === 'creation' && <CreationMenu menuClicked={this.menuReducer} />}
-          { this.state.menuShowing === 'caption' && <Caption dispatch={this.captionReducer} originalCaption={this.fpPending.text} />}
+          { this.state.menuShowing === 'caption' && <Caption dispatch={this.captionReducer} 
+                                                             originalCaption={this.fpPending.text} 
+                                                             originalBG={this.fpPending.background}
+                                                             originalClr={this.fpPending.color}/>}
         </div>  
       </div>
   </div>
@@ -1504,7 +1501,7 @@ export class FlowDesignerData
 //     return (      
 //       { nodeSelection.map ( d => {     
 //           { d.class == 'image' &&        
-//               <img src={ path(d) } style={{width:'64px', height:'32px'}} onDrag={ (ev) => deviceDrag(ev, d)} draggable />
+//               <img alt='' src={ path(d) } style={{width:'64px', height:'32px'}} onDrag={ (ev) => deviceDrag(ev, d)} draggable />
 //           }
 //           { d.class == 'button' && 
 //             <button className="fd-button">{d.name}</button>      

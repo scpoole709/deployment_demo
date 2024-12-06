@@ -47,15 +47,14 @@ export class TabCtrl extends Component<TabCtrlProps, TabCtrlState> {
 
   render() {
     return (
-       <div><ul className={ this.props.small ? 'tb-ul-small' : 'tb-ul'}>
-              { this.props.tabs.map( (t, i) => (                
-                <li className={this.liClass(i)}  onClick={ (ev) => this.setActive(ev, i)} key={i}>
-                  {t.title}
-                  <i className="fa fa-times i-tab" aria-hidden="true"></i>
-                </li>
-              ))}
-            </ul>
-        </div>
+       <ul className={ this.props.small ? 'tb-ul-small' : 'tb-ul'}>
+        { this.props.tabs.map( (t, i) => (                
+          <li className={this.liClass(i)}  onClick={ (ev) => this.setActive(ev, i)} key={i}>
+            {t.title}
+            <i className="fa fa-times i-tab" aria-hidden="true"></i>
+          </li>
+        ))}
+      </ul>
     )
   }
 

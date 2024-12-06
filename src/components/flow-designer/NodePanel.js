@@ -2,7 +2,7 @@ import React from 'react'
 
 const NodePanel = ({nodeSelection, path, deviceDrag}) => {
   return (
-    <div>
+    <div style={ {height: '100%', width: '100%', color:'black'}}>
       
       { nodeSelection.map ( d => {     
           { d.class === 'image' &&        
@@ -13,6 +13,7 @@ const NodePanel = ({nodeSelection, path, deviceDrag}) => {
           }
         })
       }    
+      {nodeSelection.length == 0 && <p style={{height: '100%', width: '100%', color:'black', textAlign:'center'}} >No user items</p>}
     )
   
     </div>
