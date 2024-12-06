@@ -438,118 +438,125 @@ export default class FlowDesignerComponent extends React.Component<FPProps, FPSt
         // if (!ev.ctrlKey)
         //   this.clearSelection();      
 
-        if (c = this.getArrowAtPt(ev))
+        c = this.getArrowAtPt(ev);
+        if (c)
         {
           this.moveArrow(ev, c, false);
         }
-        else if (c = this.getOriginAtPoint(ev))
-        {
-          this.moveArrow(ev, c, true);
-        }
-        else if (c = this.getSelectedConnectorAtPoint(ev, ctx))
-        {
-          this.bendConnector(ev, c);
-        }
-        else if (this.selectConnectors(ev, ctx).length > 0)
-        {
-          this.redraw(false);
-        }
-        else 
-        {
-          // no connectors are selected, test for flowPoints
-          let atPoint = this.atPoint(ev);
-          if (atPoint.length > 0)
-          {      
-            if (!ev.ctrlKey)
-              this.clearSelection();
-         
-            atPoint.forEach( each => {
-              if (ev.ctrlKey)
-                each.selected = each.selected > 0 ? 0 : Date.now();
-              else 
-                each.selected = Date.now();
-            })     
-            this.redraw(false);
-          }        
-          else if (!ev.ctrlKey)
+        else {
+          c = this.getOriginAtPoint(ev);
+          if (c)
           {
-            this.clearSelection();
+            this.moveArrow(ev, c, true);
           }
-          if (!ev.ctrlKey || ev.ctrlKey)
-          {
-            let selected = this.getSelected(ev);
-            if (selected.length === 0)
-            {   
-              document.onmousemove = (e) => {
-                e.stopPropagation();
-                e.preventDefault();
-
-                this.redraw(false);
-                ctx.strokeStyle = "red";
-                ctx.strokeRect((startX - rect.left) / this.scale, 
-                              (startY - rect.top) / this.scale, 
-                              (e.clientX - startX) / this.scale, 
-                              (e.clientY - startY) / this.scale);  
-              }
-              document.onmouseup = (e) => {
-                let fp = new FPRectangle();
-                fp.x = (startX - rect.left) / this.scale;
-                fp.y = (startY - rect.top) / this.scale;
-                fp.w = e.clientX - startX;
-                fp.h = e.clientY - startY;  
-
-                fp.x = Math.min(fp.x, fp.x + fp.w);
-                fp.y = Math.min(fp.y, fp.y + fp.h);
-                fp.w = Math.abs(fp.w);
-                fp.h = Math.abs(fp.h);
-
-                if (fp.w > 3 || fp.h > 3)
-                {
-                  this.fpPending = fp;
-                  
-                  e.preventDefault();
-                  e.stopPropagation();
-                  this.fpPending.text = "";
-                  this.textEntry = "";
-                  
-                  this.openFPMenu(fp, "creation");
-                }    
-                else
-                {
-                  document.onclick = (e)=>
-                  {
-                    this.doSelect(e, ctx);
-                    document.onclick = null;
-                  }
-                } 
-
-                document.onmousemove = null;
-                document.onmouseup = null;
-              }    
+          else {
+            c = this.getSelectedConnectorAtPoint(ev, ctx);
+            if (c)
+            {
+              this.bendConnector(ev, c);
+            }
+            else if (this.selectConnectors(ev, ctx).length > 0)
+            {
+              this.redraw(false);
             }
             else 
             {
-              document.onmousemove = (e) => {
-                e.stopPropagation();
-                e.preventDefault();
-
-                let moveX = (e.clientX - startX) / this.scale;
-                let moveY = (e.clientY - startY) / this.scale;
-
-                startX = e.clientX;
-                startY = e.clientY;
-
-                selected.forEach( each => {
-                  each.x += moveX;
-                  each.y += moveY;
-                })
-                this.redraw(false); 
+              // no connectors are selected, test for flowPoints
+              let atPoint = this.atPoint(ev);
+              if (atPoint.length > 0)
+              {      
+                if (!ev.ctrlKey)
+                  this.clearSelection();
+            
+                atPoint.forEach( each => {
+                  if (ev.ctrlKey)
+                    each.selected = each.selected > 0 ? 0 : Date.now();
+                  else 
+                    each.selected = Date.now();
+                })     
+                this.redraw(false);
+              }        
+              else if (!ev.ctrlKey)
+              {
+                this.clearSelection();
               }
-              document.onmouseup = (e) => {
-                document.onmousemove = null;
-                document.onmouseup = null;
+              if (!ev.ctrlKey || ev.ctrlKey)
+              {
+                let selected = this.getSelected(ev);
+                if (selected.length === 0)
+                {   
+                  document.onmousemove = (e) => {
+                    e.stopPropagation();
+                    e.preventDefault();
+
+                    this.redraw(false);
+                    ctx.strokeStyle = "red";
+                    ctx.strokeRect((startX - rect.left) / this.scale, 
+                                  (startY - rect.top) / this.scale, 
+                                  (e.clientX - startX) / this.scale, 
+                                  (e.clientY - startY) / this.scale);  
+                  }
+                  document.onmouseup = (e) => {
+                    let fp = new FPRectangle();
+                    fp.x = (startX - rect.left) / this.scale;
+                    fp.y = (startY - rect.top) / this.scale;
+                    fp.w = e.clientX - startX;
+                    fp.h = e.clientY - startY;  
+
+                    fp.x = Math.min(fp.x, fp.x + fp.w);
+                    fp.y = Math.min(fp.y, fp.y + fp.h);
+                    fp.w = Math.abs(fp.w);
+                    fp.h = Math.abs(fp.h);
+
+                    if (fp.w > 3 || fp.h > 3)
+                    {
+                      this.fpPending = fp;
+                      
+                      e.preventDefault();
+                      e.stopPropagation();
+                      this.fpPending.text = "";
+                      this.textEntry = "";
+                      
+                      this.openFPMenu(fp, "creation");
+                    }    
+                    else
+                    {
+                      document.onclick = (e)=>
+                      {
+                        this.doSelect(e, ctx);
+                        document.onclick = null;
+                      }
+                    } 
+
+                    document.onmousemove = null;
+                    document.onmouseup = null;
+                  }    
+                }
+                else 
+                {
+                  document.onmousemove = (e) => {
+                    e.stopPropagation();
+                    e.preventDefault();
+
+                    let moveX = (e.clientX - startX) / this.scale;
+                    let moveY = (e.clientY - startY) / this.scale;
+
+                    startX = e.clientX;
+                    startY = e.clientY;
+
+                    selected.forEach( each => {
+                      each.x += moveX;
+                      each.y += moveY;
+                    })
+                    this.redraw(false); 
+                  }
+                  document.onmouseup = (e) => {
+                    document.onmousemove = null;
+                    document.onmouseup = null;
+                  }
+                  this.redraw(true);
+                }
               }
-              this.redraw(true);
             }
           }
         }
