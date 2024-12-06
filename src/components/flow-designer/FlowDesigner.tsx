@@ -1,13 +1,26 @@
+import './FlowDesigner.css';
+
 import React, { createRef } from 'react';
 
-import { NodeSelection, Connector, FlowPoint, FPDiamond, FPImage, FPOval, FPRectangle, FPRenderer, FPLocation, FPUser, FPBarcode } from './FlowObjects.ts';
-import { TabCtrl, TabInfo } from '../tab-ctrl/TabCtrl.tsx';
-import NodePanel from './NodePanel.js';
-import CreationMenu from './CreationMenu.js';
-import './FlowDesigner.css';
-import Caption from './Caption.js';
 import Slider from '../slider/Slider.js';
+import { TabCtrl, TabInfo } from '../tab-ctrl/TabCtrl.tsx';
 import Upload from '../upload/Upload.tsx';
+import Caption from './Caption.js';
+import CreationMenu from './CreationMenu.js';
+import {
+  Connector,
+  FlowPoint,
+  FPBarcode,
+  FPDiamond,
+  FPImage,
+  FPLocation,
+  FPOval,
+  FPRectangle,
+  FPRenderer,
+  FPUser,
+  NodeSelection,
+} from './FlowObjects.ts';
+import NodePanel from './NodePanel.js';
 
 // const MENU_ACTIONS = {
 //   CLICKED: 'clicked',
@@ -90,7 +103,7 @@ export default class FlowDesignerComponent extends React.Component<FPProps, FPSt
   graphicLocation = {text:'Location'};
 
   get canvas (): any{
-    return this.canvasRef?.current;
+    return this.canvasRef.current;
   }
   get ctx(){
     return this.canvas.getContext("2d");
@@ -145,7 +158,7 @@ export default class FlowDesignerComponent extends React.Component<FPProps, FPSt
 
   set flowInfo(value:FlowDesignerData)
   {
-    if (value != null)
+    if (value !== null)
       this.setupData(value);
   }
   get flowInfo():FlowDesignerData
@@ -187,7 +200,7 @@ export default class FlowDesignerComponent extends React.Component<FPProps, FPSt
     if (this.nodeSelection && this.canvas)
     {
       this.nodeSelection.forEach( each =>{
-        var mt = this.ctx?.measureText(each.name);
+        var mt = this.ctx.measureText(each.name);
         width = Math.max(mt ? mt.width : 100, width);
       });
     }
@@ -204,9 +217,9 @@ export default class FlowDesignerComponent extends React.Component<FPProps, FPSt
     setTimeout( () =>
     {      
       let canvasContainer = document.getElementById("canvas-div");
-      if (canvasContainer != null)
+      if (canvasContainer !== null)
       { 
-        if (this.flowInfo.flowPoints.length == 0)
+        if (this.flowInfo.flowPoints.length === 0)
         {
           let r = canvasContainer.getBoundingClientRect();
           this.canvas.width = r.width;
@@ -276,7 +289,7 @@ export default class FlowDesignerComponent extends React.Component<FPProps, FPSt
     switch(event.key)
     {
       case "Delete":
-        if (this.currentMenu == undefined)
+        if (this.currentMenu === undefined)
         {
           for (var i = this.flowPoints.length; i > 0; i--)
           {
@@ -286,7 +299,7 @@ export default class FlowDesignerComponent extends React.Component<FPProps, FPSt
               for (var j = this.connectors.length; j > 0; j--)
               {
                 let c = this.connectors[j-1];
-                if (c.fp1 == fp || c.fp2 == fp)
+                if (c.fp1 === fp || c.fp2 === fp)
                 {
                   this.connectors.splice(j-1, 1);
                 }
@@ -294,12 +307,12 @@ export default class FlowDesignerComponent extends React.Component<FPProps, FPSt
               this.flowPoints.splice(i-1, 1);
             }
           }
-          for (var j = this.connectors.length; j > 0; j--)
+          for (var jj = this.connectors.length; jj > 0; jj--)
           {
-            let c = this.connectors[j-1];
+            let c = this.connectors[jj-1];
             if (c.selected > 0)
             {
-              this.connectors.splice(j-1, 1);
+              this.connectors.splice(jj-1, 1);
             }
           }
 
@@ -362,7 +375,7 @@ export default class FlowDesignerComponent extends React.Component<FPProps, FPSt
       ctx.resetTransform();
       ctx.scale(this.scale, this.scale);
 
-      if (each.rotation != 0)
+      if (each.rotation !== 0)
       {
         let tmpX = each.x + each.w / 2;
         let tmpY = each.y + each.h / 2;
@@ -465,7 +478,7 @@ export default class FlowDesignerComponent extends React.Component<FPProps, FPSt
           if (!ev.ctrlKey || ev.ctrlKey)
           {
             let selected = this.getSelected(ev);
-            if (selected.length == 0)
+            if (selected.length === 0)
             {   
               document.onmousemove = (e) => {
                 e.stopPropagation();
@@ -590,7 +603,7 @@ export default class FlowDesignerComponent extends React.Component<FPProps, FPSt
     for (var i = 0; i < this.connectors.length; i++)
     {
       let connector = this.connectors[i];
-      let cc = connector.fp1?.connectorCenter(this.ctx, connector.index1);
+      let cc = connector.fp1 ? connector.fp1.connectorCenter(this.ctx, connector.index1) : undefined;
       
       if (!!cc){
         let a1 = Math.abs(p.y - cc.y);
@@ -608,7 +621,7 @@ export default class FlowDesignerComponent extends React.Component<FPProps, FPSt
     let rect = this.canvas.getBoundingClientRect();
     let ctx = this.ctx;     
     
-    var c = connector.fp1?.connectorCenter(ctx, connector.index1);
+    var c = connector.fp1 ? connector.fp1.connectorCenter(ctx, connector.index1) : undefined;
     
     this.setState({state: "connecting"});
 
@@ -638,7 +651,7 @@ export default class FlowDesignerComponent extends React.Component<FPProps, FPSt
         {
           if (Connector.contains((e.clientX - rect.left) / this.scale, (e.clientY - rect.top) / this.scale, fp, j, ctx))
           {
-            if (connector?.fp1?.id != fp.id){
+            if (connector.fp1 && connector.fp1.id !== fp.id){
               connector.fp2 = fp;
               connector.index2 = j;
               this.connectors.push(connector);
@@ -666,7 +679,7 @@ export default class FlowDesignerComponent extends React.Component<FPProps, FPSt
       e.stopPropagation();
       e.preventDefault();  
          
-      if (connector.bx == undefined)
+      if (connector.bx === undefined)
       {
         connector.bx = (e.clientX - rect.left) / this.scale;
         connector.by = (e.clientY - rect.top) / this.scale;
@@ -700,9 +713,12 @@ export default class FlowDesignerComponent extends React.Component<FPProps, FPSt
     let saveIndex1 = connector.index1;
     let saveFP2 = connector.fp2;
     let saveIndex2 = connector.index2;
+
+    if (!connector.fp1 || !connector.fp2)
+      return;
        
-    var c = (swap) ? connector.fp2?.connectorCenter(ctx, connector.index2)
-                   : connector.fp1?.connectorCenter(ctx, connector.index1);
+    var c = (swap) ? connector.fp2.connectorCenter(ctx, connector.index2)
+                   : connector.fp1.connectorCenter(ctx, connector.index1);
     
     connector.selected = Date.now();
     
@@ -721,7 +737,7 @@ export default class FlowDesignerComponent extends React.Component<FPProps, FPSt
         ctx.moveTo(c.x, c.y);
         let newX = (e.clientX - rect.left) / this.scale;
         let newY = (e.clientY - rect.top) / this.scale;
-        if (connector.bx == undefined)
+        if (connector.bx === undefined)
         {
           ctx.lineTo(newX, newY);
         }
@@ -878,7 +894,7 @@ export default class FlowDesignerComponent extends React.Component<FPProps, FPSt
   {
     for (var i = 0; i < this.flowPoints.length; i++)
     {
-      if (this.flowPoints[i].id == id)
+      if (this.flowPoints[i].id === id)
         return this.flowPoints[i];
     }
     return undefined;
@@ -1167,7 +1183,7 @@ export default class FlowDesignerComponent extends React.Component<FPProps, FPSt
       if (each.selected > 0)
         ret.push(each);
     });
-    if (ev && ret.length == 0)
+    if (ev && ret.length === 0)
     {
       ret = this.atPoint(ev);
       ret.forEach( each => {
@@ -1372,16 +1388,16 @@ export default class FlowDesignerComponent extends React.Component<FPProps, FPSt
         </div>
         <span style={{width:'100%',borderTop:'solid 1px black',marginBottom:'10px'}}></span>
 
-        { this.state.currentTab == 0 && <NodePanel nodeSelection={this.nodeSelection} path={this.path} deviceDrag={this.deviceDrag}/> }
+        { this.state.currentTab === 0 && <NodePanel nodeSelection={this.nodeSelection} path={this.path} deviceDrag={this.deviceDrag}/> }
 
-        { this.state.currentTab == 2 &&
+        { this.state.currentTab === 2 &&
           <div className="fd-file">
             <button onClick={ () => this.save()}>Download Flow Diagram</button>
             <Upload label={'Upload Flow Diagram'} fileSelected={(ev) => this.loadDiagram(ev)} accepted={"'.fd'"} />
           </div>
         }
     
-        { this.state.currentTab == 1 &&
+        { this.state.currentTab === 1 &&
           <div className='fd-menu'>
             <img alt='' src={require('./images/Start.png')} className="fd-graphic" onDragStart={(ev)=>this.onDragStart(ev, 'Start')}/>
             <img alt='' src={require('./images/End.png')} className="fd-graphic" onDragStart={(ev)=>this.onDragStart(ev, 'End')}/>
@@ -1444,7 +1460,7 @@ export default class FlowDesignerComponent extends React.Component<FPProps, FPSt
       </select>
     </ng-container>
 
-    <ng-container *ngIf="fpPending.type != 'FPImage'">
+    <ng-container *ngIf="fpPending.type !== 'FPImage'">
       <label>Rotation</label>
       <select className="fd-select" [(ngModel)]="fpPending.rotation" (change)="test()">
         <option [ngValue]="0">0</option>

@@ -20,7 +20,7 @@ const Slider = ({orientation, minimum, maximum, callback}) => {
       }
       if (callback)
         callback(position);
-    },[ position, orientation] );
+    });
     
   function calcPositionY(evY, top, bottom, vh){
     let test = ((bottom - evY) / vh) * (maximum - minimum);
@@ -53,7 +53,6 @@ const Slider = ({orientation, minimum, maximum, callback}) => {
   function drawY()
   {
     let dr = container.current.getBoundingClientRect();
-    let dc = canvas().getBoundingClientRect();
     let w = Math.min(dr.width, dr.height);
     let h = Math.max(dr.width, dr.height);    
     
@@ -137,22 +136,9 @@ const Slider = ({orientation, minimum, maximum, callback}) => {
     return w - (0.5 * canvas().height);
   }
 
-  function doDrawing()
-  {    
-    if (orientation === 'x')
-    {
-      drawX();
-    }
-    else
-    {
-      drawY();
-    }
-  }
-
   function drawX()
   {
     let dr = container.current.getBoundingClientRect();
-    let dc = canvas().getBoundingClientRect();
     let h = Math.min(dr.width, dr.height);
     let w = Math.max(dr.width, dr.height);        
     

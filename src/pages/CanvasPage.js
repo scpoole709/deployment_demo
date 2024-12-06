@@ -1,12 +1,9 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import FlowDesigner from '../components/flow-designer/FlowDesigner.tsx'
-import Slider from '../components/slider/Slider'
 import './CanvasPage.css';
 
 const CanvasPage = () => {
-  const [orientation, setOrientation] = useState('x');
-  const [position, setPosition] = useState(0);
-  const sliderRef = useRef(null);
+  const [orientation] = useState('x');
 
   useEffect( () => {
     // sliderRef.current.style.height = orientation === 'x' ? '5em' : '10em';

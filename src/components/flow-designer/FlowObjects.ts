@@ -54,7 +54,7 @@ export class FlowPoint
   drawConnector(ctx, index:number, rect?)
   {
     let r = Connector.rad;
-    if (rect == undefined)
+    if (rect === undefined)
       rect = this.selectedRect(ctx);
 
     let c = this.connectorCenter(ctx, index, rect);
@@ -68,7 +68,7 @@ export class FlowPoint
   connectorCenter( ctx, index:number, rect?)
   {
     let r = Connector.rad;
-    if (rect == undefined) 
+    if (rect === undefined) 
       rect = this.selectedRect(ctx);
 
     switch(this.rotation)
@@ -84,7 +84,6 @@ export class FlowPoint
           case 3: return {x:rect.x + rect.w/2, y:rect.y + rect.h + r};
           default: return {x:0, y:0};
         }
-        break;
       case 90:
       case 270:
         switch(index)
@@ -95,7 +94,6 @@ export class FlowPoint
           case 3: return {x:rect.x + rect.w/2, y:rect.y + (rect.h / 2) + (rect.w / 2) + r};
           default: return {x:0, y:0};
         }
-        break;
     }
   }
 
@@ -146,7 +144,7 @@ export class FlowPoint
   selectedRect(ctx)
   {
     let r = {x:this.x, y:this.y, w:this.w, h:this.h};
-    if (this.text && this.type == "FPUser")
+    if (this.text && this.type === "FPUser")
     {
       ctx.font = FlowPoint.graphicFont;
       let fm = ctx.measureText(this.text);         
@@ -157,7 +155,7 @@ export class FlowPoint
       r.y -= 2;
       r.h += 4;            
     }
-    else if (this.text && this.type == "FPImage")
+    else if (this.text && this.type === "FPImage")
     {
       ctx.font = FlowPoint.graphicFont;
       let fm = ctx.measureText(this.text);         
@@ -256,7 +254,7 @@ export class FPRectangle extends FlowPoint
   constructor(data?)
   {
     super(data);
-    if (data == undefined)
+    if (data === undefined)
     {
       this.type = "FPRectangle";
     }
@@ -264,7 +262,7 @@ export class FPRectangle extends FlowPoint
 
   render(ctx)
   {
-    if (this.background != "none")
+    if (this.background !== "none")
     {
       ctx.fillStyle = this.background;
       ctx.fillRect(this.x, this.y, this.w, this.h);
@@ -285,7 +283,7 @@ export class FPDiamond extends FlowPoint
   constructor(data?)
   {
     super(data);
-    if (data == undefined)
+    if (data === undefined)
     {
       this.type = "FPDiamond";
     }
@@ -301,7 +299,7 @@ export class FPDiamond extends FlowPoint
     var Xcenter = this.x + this.w / 2,
     Ycenter = this.y + this.h / 2;
 
-    ctx.strokeStyle = this.background == "none" ? "black" : this.background;
+    ctx.strokeStyle = this.background === "none" ? "black" : this.background;
     ctx.fillStyle = this.background;
 
     ctx.beginPath();
@@ -313,7 +311,7 @@ export class FPDiamond extends FlowPoint
 
     ctx.stroke();
 
-    if (this.background != "none")
+    if (this.background !== "none")
     {
       ctx.fillStyle = this.background;
       ctx.fill();
@@ -329,7 +327,7 @@ export class FPPolygon extends FlowPoint
   constructor(data?)
   {
     super(data);
-    if (data == undefined)
+    if (data === undefined)
     {
       this.type = "FPRectangle";
     }  
@@ -370,7 +368,7 @@ export class FPOval extends FlowPoint
   constructor(data?)
   {
     super(data);
-    if (data == undefined)
+    if (data === undefined)
     {
       this.type = "FPOval";
     }
@@ -383,13 +381,13 @@ export class FPOval extends FlowPoint
 
   render(ctx)
   {
-    ctx.strokeStyle = this.background == "none" ? "black" : this.background;
+    ctx.strokeStyle = this.background === "none" ? "black" : this.background;
     ctx.fillStyle = this.background;
     
     ctx.beginPath();
     ctx.ellipse(this.x + this.w / 2, this.y + this.h / 2, this.w / 2, this.h / 2, 0, 0, 2 * Math.PI);
     ctx.stroke();
-    if (this.background != "none")
+    if (this.background !== "none")
     {     
       ctx.fill();
     }
@@ -404,7 +402,7 @@ export class FPLocation extends FlowPoint
   constructor(data?)
   {
     super(data);
-    if (data == undefined)
+    if (data === undefined)
     {
       this.type = "FPLocation";
     }
@@ -474,7 +472,7 @@ export class FPLocation extends FlowPoint
 
   renderRect(ctx)
   {
-    if (this.background != "none")
+    if (this.background !== "none")
     {
       ctx.fillStyle = this.background;
       ctx.fillRect(this.x, this.y, this.w, this.h);
@@ -516,11 +514,11 @@ export class FPLocation extends FlowPoint
     ctx.lineWidth = 2;
     ctx.fillStyle = '#77CCEE';
     ctx.stroke();
-    if (this.background != "none")
+    if (this.background !== "none")
     {     
       //ctx.fill();
     }
-    // ctx.strokeStyle = this.background == "none" ? "black" : this.background;
+    // ctx.strokeStyle = this.background === "none" ? "black" : this.background;
     // ctx.fillStyle = this.background;
     
     // ctx.beginPath();
@@ -538,7 +536,7 @@ export class FPImage extends FlowPoint
   constructor(data?)
   {
     super(data);
-    if (data == undefined)
+    if (data === undefined)
     {
       this.type = "FPImage";
     }
@@ -548,10 +546,10 @@ export class FPImage extends FlowPoint
 
   render(ctx)
   {
-    let img = <HTMLImageElement>document.createElement("IMG");
+    let img = document.createElement("IMG") as HTMLImageElement;
     img.src = this.asset;
     
-    if (this.background != "none")
+    if (this.background !== "none")
     {
       ctx.fillStyle = this.background;
       ctx.fillRect(this.x, this.y, this.w, this.h);
@@ -583,7 +581,7 @@ export class FPUser extends FlowPoint
   constructor(data?)
   {
     super(data);
-    if (data == undefined)
+    if (data === undefined)
     {
       this.type = "FPUser";
       this.background = "none";
@@ -664,7 +662,7 @@ export class Connector
   cycle = 0;
   render(ctx, readonly:boolean, testStraight?:boolean)
   {
-    if (this.fp1 == undefined || this.fp2 == undefined)
+    if (this.fp1 === undefined || this.fp2 === undefined)
       return;
 
     // draw the line
@@ -721,7 +719,7 @@ export class Connector
     {
       var x1, y1, x2, y2;
 
-      if (this.bx == undefined)
+      if (this.bx === undefined)
       {
         x1 = c1.x;
         y1 = c1.y;
@@ -737,7 +735,6 @@ export class Connector
         x2 = (Math.pow((1-t),3) * c1.x) + (3 * Math.pow(1-t, 2) * t * this.bx) + (3 * (1-t) * t *t * this.bx) + Math.pow(t,3) * c2.x;
         y2 = (Math.pow((1-t),3) * c1.y) + (3 * Math.pow(1-t, 2) * t * this.by) + (3 * (1-t) * t *t * this.by) + Math.pow(t,3) * c2.y;
       }
-      const endLen = 7; // length of end lines
   
       let angInRadians = Math.atan2(y2 - y1, x2 - x1);
   
@@ -751,9 +748,7 @@ export class Connector
       this.connectorIndex++;
       let indexFactor = this.connectorIndex % factor;
 
-      var x1, y1, x2, y2;
-
-      if (this.bx == undefined)
+      if (this.bx === undefined)
       {
         x1 = c1.x;
         y1 = c1.y;
@@ -769,7 +764,6 @@ export class Connector
         x2 = (Math.pow((1-t),3) * c1.x) + (3 * Math.pow(1-t, 2) * t * this.bx) + (3 * (1-t) * t *t * this.bx) + Math.pow(t,3) * c2.x;
         y2 = (Math.pow((1-t),3) * c1.y) + (3 * Math.pow(1-t, 2) * t * this.by) + (3 * (1-t) * t *t * this.by) + Math.pow(t,3) * c2.y;
       }
-      const endLen = 7; // length of end lines
 
       let angInRadians = Math.atan2(y2 - y1, x2 - x1);
 
@@ -785,7 +779,7 @@ export class Connector
       let display = (indexFactor + cycleFactor) % 8;
       indexList.push(display);
       
-      if (display == (factor - 1))
+      if (display === (factor - 1))
       {
         indexList.push(0);   
         this.cycle++;
@@ -863,7 +857,7 @@ export class Connector
 
   intersectsRect(x, y, ctx, scale)
   {
-    if (this.fp1 == undefined || this.fp2 == undefined)
+    if (this.fp1 === undefined || this.fp2 === undefined)
       return;
 
     let c1 = this.fp1.connectorCenter(ctx, this.index1);
@@ -874,7 +868,7 @@ export class Connector
     let x2 = c2.x; // / scale;
     let y2 = c2.y; // / scale;
 
-    if (this.bx == undefined)
+    if (this.bx === undefined)
     {      
       let ex1 = x - 3;
       let ex2 = x + 3;
@@ -955,11 +949,11 @@ export class Connector
 
       let adj = testX - p1x;
 
-      tarray.push( adj == 0 ? 0 : (testY - p1y) / adj);
+      tarray.push( adj === 0 ? 0 : (testY - p1y) / adj);
     }
 
     let s = 0;
-    for (var i = 0; i < tarray.length; i++)
+    for (i = 0; i < tarray.length; i++)
     {
       if (i > 0)
       {
@@ -990,23 +984,23 @@ export class FPBarcode
 
   static loadImages()
   {
-    this.imgHandHeldScanner = <HTMLImageElement>document.createElement("IMG");
+    this.imgHandHeldScanner = document.createElement("IMG");
     this.imgHandHeldScanner.src = "./assets/images/HandHeldScanner.gif";
-    this.imgLaminator = <HTMLImageElement>document.createElement("IMG");
+    this.imgLaminator = document.createElement("IMG");
     this.imgLaminator.src = "./assets/images/Laminator.gif";
-    this.imgFinisher = <HTMLImageElement>document.createElement("IMG");
+    this.imgFinisher = document.createElement("IMG");
     this.imgFinisher.src = "./assets/images/Finisher.gif";
-    this.imgCode39 = <HTMLImageElement>document.createElement("IMG");
+    this.imgCode39 = document.createElement("IMG");
     this.imgCode39.src = "./assets/barcode/Code39.gif";
-    this.imgCode128 = <HTMLImageElement>document.createElement("IMG");
+    this.imgCode128 = document.createElement("IMG");
     this.imgCode128.src = "./assets/barcode/Code128.gif";
-    this.imgEAN13 = <HTMLImageElement>document.createElement("IMG");
+    this.imgEAN13 = document.createElement("IMG");
     this.imgEAN13.src = "./assets/barcode/EAN_13.gif";
-    this.imgDataMatrix = <HTMLImageElement>document.createElement("IMG");
+    this.imgDataMatrix = document.createElement("IMG");
     this.imgDataMatrix.src = "./assets/barcode/DataMatrix.gif";
-    this.imgUPCA = <HTMLImageElement>document.createElement("IMG");
+    this.imgUPCA = document.createElement("IMG");
     this.imgUPCA.src = "./assets/barcode/UPC_A.gif";
-    this.imgDefault = <HTMLImageElement>document.createElement("IMG");
+    this.imgDefault = document.createElement("IMG");
     this.imgDefault.src = "./assets/images/scanner.gif";
   }
 }

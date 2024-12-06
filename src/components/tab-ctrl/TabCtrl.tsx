@@ -30,7 +30,7 @@ export class TabCtrl extends Component<TabCtrlProps, TabCtrlState> {
   onTouch: any = () => {}
 
   writeValue(value: any){
-    let text = value
+    //let text = value
   }
 
   registerOnChange(fn: any){
@@ -42,7 +42,7 @@ export class TabCtrl extends Component<TabCtrlProps, TabCtrlState> {
   }
 
   liClass(i:number){
-    return (this.currentTab == i) ? 'tb-li-active' : 'tb-li';
+    return (this.currentTab === i) ? 'tb-li-active' : 'tb-li';
   }
 
   render() {
@@ -107,7 +107,7 @@ export class TabCtrl extends Component<TabCtrlProps, TabCtrlState> {
   setTabState( value:boolean[])
   {
     this.props.tabs.forEach( (tab, i) => {
-      if (value[i] != undefined)
+      if (value[i] !== undefined)
         tab.show = value[i];
     });
   }
@@ -116,7 +116,7 @@ export class TabCtrl extends Component<TabCtrlProps, TabCtrlState> {
   {
     let ti = new TabInfo();
 
-    if (Object.prototype.toString.call(v) == '[object String]')
+    if (Object.prototype.toString.call(v) === '[object String]')
     {
       ti.title = v;
       ti.show = true;
@@ -126,10 +126,10 @@ export class TabCtrl extends Component<TabCtrlProps, TabCtrlState> {
     {
       ti.title = (v['title']) ? v['title'] : "Tab " + index;
       ti.tooltip = (v['tooltip']) ? v['tooltip'] : undefined;
-      ti.show = (v['show'] == false) ? false : true;  
-      ti.enabled = (v['enabled'] == 'false') ? false : true;
+      ti.show = (v['show'] === false) ? false : true;  
+      ti.enabled = (v['enabled'] === 'false') ? false : true;
     }
-    ti.index = (index == undefined) ? this.props.tabs.length : index;
+    ti.index = (index === undefined) ? this.props.tabs.length : index;
     this.props.tabs.push(ti);
   }
 
@@ -144,7 +144,7 @@ export class TabCtrl extends Component<TabCtrlProps, TabCtrlState> {
 
       if (this.currentTab > index)
         this.currentTab--;
-      else if (this.currentTab == index)
+      else if (this.currentTab === index)
       {
         if (this.currentTab >= this.props.tabs.length)
           this.currentTab--;
@@ -175,7 +175,7 @@ export class TabCtrl extends Component<TabCtrlProps, TabCtrlState> {
 
   showTab(iIndex:number, fTF:boolean)
   {
-    if (this.props.tabs == undefined)
+    if (this.props.tabs === undefined)
       console.log("undefined");
     if (iIndex >= this.props.tabs.length)
       console.log("too long");
@@ -189,17 +189,17 @@ export class TabCtrl extends Component<TabCtrlProps, TabCtrlState> {
 
   getBG(iIndex)
   {
-    return (iIndex == this.props.currentTab) ? this.tbbgActive : this.tbbg;
+    return (iIndex === this.props.currentTab) ? this.tbbgActive : this.tbbg;
   }
 
   getTxt(iIndex)
   {
-    return (iIndex == this.props.currentTab) ? this.tbTxtActive : this.tbTxt;
+    return (iIndex === this.props.currentTab) ? this.tbTxtActive : this.tbTxt;
   }
 
   getValidTab (prospect:number)
   {
-    if (prospect == undefined || prospect < 0 || prospect > this.props.tabs.length || this.props.tabs[prospect].show == false)
+    if (prospect === undefined || prospect < 0 || prospect > this.props.tabs.length || this.props.tabs[prospect].show === false)
     {
       for (var i = 0; i < this.props.tabs.length; i++)
       {
