@@ -1,5 +1,234 @@
-.component-container{
-    height: 1%;
-    width: 1%;
-    border: solid 2px white;
+.fd-container {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-template-rows: auto;
+    height: 100%;
+    width: 100%;
+    background: white;
+    position: relative;
+}
+
+.fd-selection {
+    background: #ddd;
+    height: 100%;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto 1fr;
+    padding-top: 10px;
+    overflow: hidden;
+
+    button{
+        width: 15em;
+    }
+}
+
+.fd-canvas-div {
+    overflow: auto;
+    background: #999;
+    position: relative;
+    border: solid 3px yellow;
+    width: 100%;
+    height: 100%;
+    display: flex;
+
+    canvas{
+        height: 100%;
+        width: 100%;
+    }
+}
+
+.fd-toolbar {
+    grid-column: 1 / span 2;
+    background: #DCDB6F;
+    height: 1.75em;
+    padding: 0px .5em 0px .5em;
+}
+
+.fd-button {
+    box-shadow: 5px 10px 18px #aaaadd;
+    height: 2em;
+    margin: 3px 3px;
+    font-size: 12px;
+    color: #fff;
+    text-align: center;
+    background-color: #007BFF;
+    border-radius: 3px;
+    border: solid 1px #007BFF;
+}
+
+.fd-context {
+    display: none;
+    position: absolute;
+    border-radius: 3px;
+    padding: .3em .3em;
+    border: solid 1px lightgray;
+    background: white;
+    height: fit-content;
+    width: fit-content;
+}
+
+.fd-menu {
+    display: flex;
+    flex-direction: column;
+}
+
+.fd-scale {
+    z-index: 3;
+    width: 2em;
+    height: 5em;
+    position: absolute;
+    top: 0em;
+    right: 0em;
+    background: none;
+    border: none;
+}
+
+.fd-caption {
+    display: grid;
+    grid-template-columns: auto 15em;
+    gap: 10px;
+    font-size: 11pt;
+    color: black;
+    text-align: right;
+    padding: 10px;
+
+    label{
+        color: black;
+        font-size:11pt;
+    }
+    input, select, option{
+        color: black;
+        font-size: 11pt;
+    }
+}
+
+.fd-graphic {
+    width: 100px;
+    height: 37px;
+    margin: 0 auto;
+    padding-top: 7px;
+}
+
+.fd-graphic-square {
+    width: 30px;
+    height: 37px;
+    margin: 0 auto;
+    padding-top: 7px;
+}
+
+.fd-file{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    gap: 10px;
+}
+
+.fd-info {
+    margin-right: 5px;
+    color: black;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+.dlg-template-close {
+    background: none;
+    border: none;
+    right: .5em;
+    top: .25em;
+    position: absolute;
+}
+
+.fd-ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: auto;
+    font-size: 11pt;
+
+    li {
+        padding: 0px 5px;
+        color: black;
+    }
+    
+    li:hover {
+        background: lightblue;
+    }
+}
+
+.tb-i {
+    color: black;
+    font-size: 18pt;
+    margin-right: 10px;
+}
+
+
+
+/* width */
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background-color: lightgray;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: darkgrey;
+    border-radius: 5px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: gray;
+}
+
+
+/* width */
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background-color: lightgray;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: darkgrey;
+    border-radius: 5px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: gray;
+}
+
+.tooltip {
+    position: relative;
+    display: inline-block;
+}
+
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 120px;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+
+    /* Position the tooltip */
+    position: absolute;
+    z-index: 3;
+}
+
+.tooltip:hover .tooltiptext {
+    visibility: visible;
 }

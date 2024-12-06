@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import './Slider.css'
 
-const Slider = ({title, orientation, minimum, maximum, callback}) => {
-    const [position, setPosition] = useState(minimum);
+const Slider = ({orientation, minimum, maximum, callback}) => {
+    const [position, setPosition] = useState(maximum);
     const container = useRef(null);
     const sliderdivY = useRef(null);
     const sliderdivX = useRef(null);
@@ -22,17 +22,25 @@ const Slider = ({title, orientation, minimum, maximum, callback}) => {
         callback(position);
     },[ position, orientation] );
     
+  function calcPositionY(evY, top, bottom, vh){
+    let test = ((bottom - evY) / vh) * (maximum - minimum);
+    setPosition(Math.floor(Math.max(Math.min(test, maximum), minimum)));
+  }
+
+  function calcPositionX(evX, left, right, vw){
+    let test = ((evX - left) / vw) * (maximum - minimum);
+    setPosition(Math.floor(Math.max(Math.min(test, maximum), minimum)));
+  }
+
   function slideY(ev)
   {
     let b = canvas().getBoundingClientRect();
     let vh = getVisibleHeight();
 
-    let test = ((ev.clientY - b.top) / vh) * (maximum - minimum);
-    setPosition(Math.floor(Math.max(Math.min(test, maximum), minimum)));
+    calcPositionY(ev.clientY, b.top, b.bottom, vh);
 
     document.onmousemove = (ev) => {
-      let test = ((ev.clientY - b.top) / vh) * (maximum - minimum);
-      setPosition(Math.floor(Math.max(Math.min(test, maximum), minimum)));
+      calcPositionY(ev.clientY, b.top, b.bottom, vh);
     }
 
     document.onmouseup = (ev) => {
@@ -55,7 +63,6 @@ const Slider = ({title, orientation, minimum, maximum, callback}) => {
     let ctx = canvas().getContext('2d');
     ctx.font =  "8px Arial";
 
-    
     let range = maximum - minimum;
     let rangeOffset = position - minimum;
     let sliderWidth = w - (w % 2);
@@ -65,7 +72,7 @@ const Slider = ({title, orientation, minimum, maximum, callback}) => {
     let sliderStart = ballWidth / 2 + 2;
     let sliderEnd = h - sliderStart; //h - (2 * sliderStart);
 
-    let center = sliderStart + ballWidth / 2 + (rangeOffset / range * (sliderEnd - sliderStart));
+    let center = sliderEnd + (ballWidth / 2) + (rangeOffset / range * (sliderStart - sliderEnd));
 
     // ctx.strokeStyle = '#000000';    
     ctx.strokeStyle = "#DDDDDD";
@@ -102,12 +109,10 @@ const Slider = ({title, orientation, minimum, maximum, callback}) => {
     let b = canvas().getBoundingClientRect();
     let vw = getVisibleWidth();
 
-    let test = ((ev.clientX - b.left) / vw) * (maximum - minimum);
-    setPosition(Math.floor(Math.max(Math.min(test, maximum), minimum)));
+    calcPositionX(ev.clientX, b.left, b.right, vw);
 
     document.onmousemove = (ev) => {
-      let test = ((ev.clientX - b.left) / vw) * (maximum - minimum);
-      setPosition(Math.floor(Math.max(Math.min(test, maximum), minimum)));
+     calcPositionX(ev.clientX, b.left, b.right, vw);
     }
 
     document.onmouseup = (ev) => {
@@ -193,7 +198,6 @@ const Slider = ({title, orientation, minimum, maximum, callback}) => {
   }
 
   return (
-    <>
       <div ref={container} className='fill-div'>
           { orientation === 'y' && 
               <div ref={sliderdivY} className='sliderdivY' >
@@ -205,8 +209,7 @@ const Slider = ({title, orientation, minimum, maximum, callback}) => {
                   <canvas ref={canvasX}></canvas>
               </div>
           }
-      </div>     
-    </> 
+      </div>
   )
 }
 

@@ -1,0 +1,87 @@
+.tb-ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow-x: auto;
+  font-size: 10pt;
+  height: 100%;
+  background: white;
+
+  li {
+      display: block;
+      float: left;
+      border-right: 1px solid #bbb;
+      border-radius: 5px 5px 0px 0px;
+      margin: 1px 1px;
+      min-width: 7em;
+      width: fit-content;
+      height: 100%;
+      text-align: center;
+      padding: 5px 4px;
+      text-decoration: none;
+      transition: height 1s;
+      cursor: pointer;
+      user-select: none;
+    }
+}
+
+.tb-ul-small {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  font-size: 8pt;
+  height: 3em;
+
+  li {
+    display: block;
+    float: left;
+    border-right: 1px solid #bbb;
+    border-radius: 5px 5px 0px 0px;
+    margin: 1px 1px;
+    min-width: 5em;
+    width: fit-content;
+    height: 100%;
+    text-align: center;
+    padding: 5px 4px;
+    text-decoration: none;
+    transition: height 1s;
+    cursor: pointer;
+    user-select: none;
+  }
+}
+
+.tb-li {
+  background: #33aadd;
+  color: white;
+}
+
+.tb-li-active {
+  color: black;
+  background: white;
+}
+
+li:last-child {
+  border-right: none;
+}
+
+li:hover {
+  background: white;
+  color: black;
+}
+
+.i-tab {
+  float: right;
+  opacity: 0.0;
+  transition: .5s opacity;
+  padding-right: 5px;
+  padding-left: 5px;
+  margin-top: 2px;
+  color: black;
+}
+
+.i-tab:hover {
+  color: black;
+  opacity: 1.0;
+}
