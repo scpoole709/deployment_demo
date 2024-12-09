@@ -20,6 +20,7 @@ function App() {
           <Route index element={<Home />} />
           <Route path="canvas" element={<CanvasPage />} />
           <Route path="songs" element={<VideoPage />} />
+          <Route path="songs/:name" element={<VideoPage />} />
         </Routes>
       </main>
     </BrowserRouter>
