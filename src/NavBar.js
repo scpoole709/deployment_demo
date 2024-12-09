@@ -5,7 +5,7 @@ const SongList = [ { title: 'Patriotic Medly', name: 'patmed', src: './videos/Co
                    { title: 'Whispers', name: 'whispe', src: './videos/Whispers.mp4', comment: 'Political commentary...', key: 3},
                    { title: 'Ancient Soul', name: 'ancsou', src: './videos/AncientSoul.mp4', comment: 'Wrote this after the 2012 election...', key: 4},
                    { title: 'Bellyfull of Love', name: 'belofv', src: './videos/BellyFull.mp4', comment: 'Dramatized auto-biography...', key: 5},
-                   { title: 'A Good Night to Rome', name: 'agonig', src: './videos/Boulevard.mp4', comment: 'Societal warning...', key: 6}  //,
+                   { title: 'A Good Night to Rome', name: 'agonig', src: './videos/Boulevard.mp4', comment: 'City life...', key: 6}  //,
                   // { title: 'Rain', name: 'rain', src: './videos/rain.mp4', comment: 'rain', key: 7}
 ];
 
